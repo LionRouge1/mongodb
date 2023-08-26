@@ -1,0 +1,27 @@
+form {
+  width: 60%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+form h1 {
+  margin-bottom: 10px;
+}
+
+form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 2px solid #ccc
+}
+
+form button {
+  width: 100%;
+  padding: 8px;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0.623);
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+}

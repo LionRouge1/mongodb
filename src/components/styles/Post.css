@@ -1,0 +1,23 @@
+.post {
+    width: 100%;
+    height: 170px;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    column-gap: 20px;
+    margin-bottom: 30px;
+}
+
+.post > img {
+    width: 100%;
+    height: 100%;
+}
+
+.post > div {
+    display: grid;
+}
+
+.post h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
