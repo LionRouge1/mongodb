@@ -5,15 +5,24 @@ const Registration = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [pwdConfirm, setPwdConfirm] = useState('');
+  const [error, setError] = useState('');
 
   const register = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(password !== pwdConfirm) return setError('Password confirmation not match');
     const config = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({username, password, pwdConfirm})
+    };
+    const response = await fetch('http://localhost:4000/register', config);
+
+    if(response.status === 200) {
+      alert('Registration successful')
+    } else {
+      setError('Registration fails')
     }
-    const request = await fetch('http://localhost:4000/register', config)
   }
 
   return (
@@ -38,6 +47,7 @@ const Registration = () => {
         onChange={(e)=> setPwdConfirm(e.target.value)}
       />
       <button>Register</button>
+      <span className="error">{error}</span>
     </form>
   )
 }
