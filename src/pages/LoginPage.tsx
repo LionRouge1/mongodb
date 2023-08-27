@@ -1,13 +1,62 @@
+import { useState } from 'react';
 import '../components/styles/Form.css';
+import { Navigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const [error, setError] = useState('');
+  const [redirect, setRedirect] = useState(false)
+  const [{username, password}, setLogin] = useState({
+    username: '',
+    password: ''
+  });
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLogin((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const response = await fetch('http://localhost:4000/login',{
+      method: 'POST',
+      headers: {'Content-Type': 'Application/json'},
+      credentials: 'include',
+      body: JSON.stringify({username, password}),
+    });
+
+    if(response.status === 200) {
+      setRedirect(true)
+    } else {
+      setError('Wrong credentials');
+    }
+  }
+
+  if (redirect) {
+    return <Navigate to={'/'} />
+  }
   
   return (
-  <form >
+  <form onSubmit={login}>
     <h1>Login</h1>
-    <input type="text" name="username" placeholder="Enter your username" />
-    <input type="password" name="password" placeholder="Enter your password" />
+    <input
+      type="text"
+      name="username"
+      placeholder="Enter your username"
+      value={username}
+      onChange={handleInput}
+    />
+    <input
+      type="password"
+      name="password"
+      placeholder="Enter your password"
+      value={password}
+      onChange={handleInput}
+    />
     <button>Login</button>
+    <span className="error">{error}</span>
   </form>
 )}
 
