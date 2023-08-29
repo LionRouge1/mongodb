@@ -1,7 +1,17 @@
 import { NavLink } from 'react-router-dom';
 import './styles/Header.css'
+import { useEffect } from 'react';
+import axios from 'axios';
 
-const Header = () => (
+const Header = () => {
+    useEffect(() => {
+        fetch('http://localhost:4000/profile', {
+            credentials: 'include',
+        })
+        // axios.get('http://localhost:4000/profile', { withCredentials: true });
+    }, []);
+
+    return (
     <header>
         <NavLink to="/" className="logo">MyLogo</NavLink>
         <nav>
@@ -9,6 +19,6 @@ const Header = () => (
             <NavLink to="/registration">Registration</NavLink>
         </nav>
     </header>
-);
+)};
 
 export default Header;
