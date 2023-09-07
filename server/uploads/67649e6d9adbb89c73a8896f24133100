@@ -1,0 +1,321 @@
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import {
+  nextPrev,
+  autocomplete,
+  allCountry,
+  borderLeft,
+} from '../logic/contact';
+
+const LoanForm = () => {
+  const [params] = useSearchParams();
+  const getAmount = params.get('amount');
+
+  const [loanform, setLoanform] = useState({
+    firstName: '',
+    lastName: '',
+    gender: '',
+    maritalStatus: '',
+    phoneNumber: '',
+    email: '',
+    country: '',
+    city: '',
+    address: '',
+    profession: '',
+    term: '',
+    amount: getAmount || '',
+    loanType: '',
+    currency: 'Dolla',
+  });
+  const [totalMonth, setTotal] = useState(1);
+
+  const handleonInput = (e) => {
+    e.target.className = '';
+  };
+
+  const handleTotalMonth = (e) => {
+    const date = new Date();
+    const termDate = new Date(e.target.value);
+    const minYear = date.getFullYear();
+    const minMonth = date.getMonth();
+    const termYear = termDate.getFullYear();
+    const termMonth = termDate.getMonth();
+
+    if (minYear === termYear) {
+      setTotal(() => termMonth - minMonth);
+    } else {
+      setTotal(() => ((termYear - minYear) * 12) + (termMonth - minMonth));
+    }
+  };
+
+  const handleInput = (e) => {
+    setLoanform((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  useEffect(() => {
+    const countryInput = document.getElementById('myInput');
+    autocomplete(countryInput, Array.from(allCountry), (count) => {
+      setLoanform((prev) => ({
+        ...prev,
+        country: count,
+      }));
+    });
+    borderLeft();
+  }, []);
+
+  const {
+    firstName,
+    lastName,
+    maritalStatus,
+    phoneNumber,
+    email,
+    country,
+    city,
+    address,
+    profession,
+    term,
+    amount,
+    loanType,
+    currency,
+  } = loanform;
+
+  const currentDate = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+  const minDate = currentDate.replaceAll('/', '-').split('-').reverse().join('-');
+  const payment = (amount * 0.03) / totalMonth;
+
+  return (
+    <form id="regForm" action={process.env.REACT_APP_BACK_END} method="post">
+      <div className="champ">
+        Personal information:
+        <div className="required input">
+          <label htmlFor="firstname">Enter your first name</label>
+          <input
+            placeholder="First name..."
+            type="text"
+            name="firstName"
+            id="firstname"
+            value={firstName}
+            onInput={handleonInput}
+            onChange={handleInput}
+          />
+        </div>
+        <div className="required input">
+          <label htmlFor="lastname">Enter your last name</label>
+          <input
+            placeholder="Last name..."
+            type="text"
+            name="lastName"
+            id="lastname"
+            value={lastName}
+            onInput={handleonInput}
+            onChange={handleInput}
+          />
+        </div>
+        <div className="required">
+          <h5>Gender</h5>
+          <input type="radio" name="gender" value="M" onChange={handleInput} />
+          Male
+          <input type="radio" name="gender" value="F" onChange={handleInput} />
+          Female
+        </div>
+
+      </div>
+
+      <div className="champ">
+        Contact Information:
+        <div className="input">
+          <label htmlFor="marital">Enter marital status</label>
+          <select
+            className="Marital status"
+            name="maritalStatus"
+            id="marital"
+            onInput={handleonInput}
+            onChange={handleInput}
+            value={maritalStatus}
+          >
+            <option value="">Select status__</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+          </select>
+        </div>
+        <div className="required input">
+          <label htmlFor="contact">Enter your phone number</label>
+          <input
+            placeholder="Phone Number"
+            id="contact"
+            name="phoneNumber"
+            onInput={handleonInput}
+            onChange={handleInput}
+            value={phoneNumber}
+          />
+        </div>
+        <div className="required input">
+          <label htmlFor="email">Enter your email</label>
+          <input
+            placeholder="Email Address"
+            id="email"
+            type="email"
+            name="email"
+            onInput={handleonInput}
+            onChange={handleInput}
+            value={email}
+          />
+        </div>
+      </div>
+
+      <div className="champ">
+        Qualification & Status:
+        <div className="autocomplete required input">
+          <label htmlFor="myInput">Enter your country</label>
+          <input
+            id="myInput"
+            type="text"
+            name="country"
+            placeholder="country"
+            onChange={handleInput}
+            value={country}
+          />
+        </div>
+        <div className="required input">
+          <label htmlFor="city">Enter your city</label>
+          <input
+            type="text"
+            name="city"
+            id="city"
+            placeholder="City (currently residing)..."
+            onChange={handleInput}
+            value={city}
+          />
+        </div>
+        <div className="required input">
+          <label htmlFor="addres">Enter your home address</label>
+          <input
+            placeholder="Home Address"
+            type="text"
+            name="address"
+            id="address"
+            onInput={handleonInput}
+            onChange={handleInput}
+            value={address}
+          />
+        </div>
+        <div className="autocomplete required input">
+          <label htmlFor="profession">Enter your profession</label>
+          <input
+            type="text"
+            placeholder="Profession..."
+            name="profession"
+            id="profession"
+            onInput={handleonInput}
+            onChange={handleInput}
+            value={profession}
+          />
+        </div>
+
+      </div>
+
+      <div className="champ">
+        Information about loan:
+        <div className="required input">
+          <label htmlFor="term">Select repayment date</label>
+          <div>
+            <input
+              type="date"
+              name="term"
+              id="term"
+              onInput={handleonInput}
+              onChange={(e) => {
+                handleTotalMonth(e);
+                handleInput(e);
+              }}
+              min={minDate}
+              value={term}
+              style={{ minWidth: '150px', width: '75%' }}
+            />
+            <span className="calc">
+              {' '}
+              {totalMonth > 1 ? `${totalMonth} months` : `${totalMonth} month`}
+              <input type="text" name="Months" value={totalMonth > 1 ? `${totalMonth} months` : `${totalMonth} month`} style={{ display: 'none' }} />
+            </span>
+          </div>
+        </div>
+        <div className="required input">
+          <label htmlFor="amount">Enter your loan</label>
+          <div>
+            <input
+              placeholder="Amount"
+              type="number"
+              name="amount"
+              id="amount"
+              min={10}
+              onInput={handleonInput}
+              onChange={handleInput}
+              value={amount}
+              style={{ minWidth: '150px', width: '30%' }}
+            />
+            <select
+              id="currency"
+              name="currency"
+              onChange={handleInput}
+              required
+              value={currency}
+              style={{ Width: '60px', width: '20%' }}
+            >
+              <option value="Dolla">DOLLA</option>
+              <option value="Euro">EURO</option>
+            </select>
+            <span className="calc">
+              Monthly Payment:
+              {currency === 'Dolla' ? `$${payment.toFixed(2)}` : `${payment.toFixed(2)} €`}
+            </span>
+          </div>
+        </div>
+
+        <div className="input">
+          <label htmlFor="type">Enter the type of loan</label>
+          <select
+            className="type"
+            name="loanType"
+            onChange={handleInput}
+            onInput={handleonInput}
+            value={loanType}
+          >
+            <option value="">Select field__</option>
+            <option value="Personal loan">Personal Loan</option>
+            <option value="Business loan">Business Loan</option>
+            <option value="Student loan">Student Loan</option>
+            <option value="Home loan">Home loan</option>
+            <option value="Mortgage loan">Mortgage Loan</option>
+            <option value="Auto loan">Auto Loan</option>
+            <option value="other">Other loan</option>
+          </select>
+        </div>
+      </div>
+
+      <div style={{ overflow: 'auto' }}>
+        <div style={{ float: 'right' }}>
+          <button type="button" id="prevBtn" onClick={() => nextPrev(-1)}>Previous</button>
+          <button type="button" id="nextBtn" onClick={() => nextPrev(1)}>Next</button>
+        </div>
+      </div>
+
+      {/* <!-- Circles which indicates the steps of the form: --> */}
+      <div style={{ textAlign: 'center', marginTop: '40px' }}>
+        <span className="step" />
+        <span className="step" />
+        <span className="step" />
+        <span className="step" />
+      </div>
+    </form>
+  );
+};
+
+export default LoanForm;

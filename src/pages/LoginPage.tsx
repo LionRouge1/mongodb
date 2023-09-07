@@ -1,63 +1,64 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import '../components/styles/Form.css';
 import { Navigate } from 'react-router-dom';
+import { UserContext } from '../userContext';
 
 const LoginPage = () => {
   const [error, setError] = useState('');
-  const [redirect, setRedirect] = useState(false)
-  const [{username, password}, setLogin] = useState({
+  const [redirect, setRedirect] = useState(false);
+  const { setUser } = useContext(UserContext);
+  const [{ username, password }, setLogin] = useState({
     username: '',
-    password: ''
+    password: '',
   });
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogin((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
-    }))
-  }
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const response = await fetch('http://localhost:4000/login',{
+    const response = await fetch('http://localhost:4000/login', {
       method: 'POST',
-      headers: {'Content-Type': 'Application/json'},
+      headers: { 'Content-Type': 'Application/json' },
       credentials: 'include',
-      body: JSON.stringify({username, password}),
+      body: JSON.stringify({ username, password }),
     });
 
-    if(response.status === 200) {
-      setRedirect(true)
+    if (response.status === 200) {
+      setUser(await response.json());
+      setRedirect(true);
     } else {
       setError('Wrong credentials');
     }
-  }
+  };
 
-  if (redirect) {
-    return <Navigate to={'/'} />
-  }
-  
+  if (redirect) return <Navigate to="/" />;
   return (
-  <form onSubmit={login}>
-    <h1>Login</h1>
-    <input
-      type="text"
-      name="username"
-      placeholder="Enter your username"
-      value={username}
-      onChange={handleInput}
-    />
-    <input
-      type="password"
-      name="password"
-      placeholder="Enter your password"
-      value={password}
-      onChange={handleInput}
-    />
-    <button>Login</button>
-    <span className="error">{error}</span>
-  </form>
-)}
+    <form onSubmit={login}>
+      <h1>Login</h1>
+      <input
+        type="text"
+        name="username"
+        placeholder="Enter your username"
+        value={username}
+        onChange={handleInput}
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Enter your password"
+        value={password}
+        onChange={handleInput}
+      />
+      <button type="submit">Login</button>
+      <span className="error">{error}</span>
+    </form>
+  );
+};
 
 export default LoginPage;

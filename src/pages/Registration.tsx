@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../components/styles/Form.css'
+import '../components/styles/Form.css';
 
 const Registration = () => {
   const [username, setUsername] = useState('');
@@ -10,20 +10,20 @@ const Registration = () => {
   const register = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(password !== pwdConfirm) return setError('Password confirmation not match');
+    if (password !== pwdConfirm) return setError('Password confirmation not match');
     const config = {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username, password, pwdConfirm})
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, pwdConfirm }),
     };
     const response = await fetch('http://localhost:4000/register', config);
 
-    if(response.status === 200) {
-      alert('Registration successful')
+    if (response.status === 200) {
+      alert('Registration successful');
     } else {
-      setError('Registration fails')
+      setError('Registration fails');
     }
-  }
+  };
 
   return (
     <form onSubmit={register}>
@@ -32,24 +32,24 @@ const Registration = () => {
         type="text"
         placeholder="Username"
         value={username}
-        onChange={(e)=> setUsername(e.target.value)}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
-        onChange={(e)=> setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <input
         type="password"
         placeholder="Confirm Password"
         value={pwdConfirm}
-        onChange={(e)=> setPwdConfirm(e.target.value)}
+        onChange={(e) => setPwdConfirm(e.target.value)}
       />
-      <button>Register</button>
+      <button type="submit">Register</button>
       <span className="error">{error}</span>
     </form>
-  )
-}
+  );
+};
 
 export default Registration;

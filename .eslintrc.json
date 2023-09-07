@@ -15,10 +15,13 @@
   "extends": ["airbnb", "plugin:react/recommended", "plugin:react-hooks/recommended"],
   "plugins": ["react"],
   "rules": {
-    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".tsx"] }],
     "react/react-in-jsx-scope": "off",
     "no-underscore-dangle": "off",
     "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "consistent-return": "off",
+    "no-unused-vars": "off",
     "no-shadow": "off"
   },
   "overrides": [
@@ -31,6 +34,8 @@
   ],
   "ignorePatterns": [
     "dist/",
-    "build/"
+    "build/",
+    "src/reportWebVitals.ts",
+    "src/types.tsx"
   ]
 }

@@ -31,3 +31,7 @@ form button {
   font-size: 18px;
   font-style: italic;
 }
+
+.create-post > button {
+  margin-top: 10px;
+}
