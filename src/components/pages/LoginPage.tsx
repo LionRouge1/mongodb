@@ -1,12 +1,14 @@
 import { useState, useContext } from 'react';
-import '../components/styles/Form.css';
+import '../styles/Form.css';
 import { Navigate } from 'react-router-dom';
-import { UserContext } from '../userContext';
+import { UserContext } from '../contexts/userContext';
+import { redirectContext } from '../contexts/redirectContext';
 
 const LoginPage = () => {
   const [error, setError] = useState('');
-  const [redirect, setRedirect] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
   const { setUser } = useContext(UserContext);
+  const { redirect, setRedirect } = useContext(redirectContext);
   const [{ username, password }, setLogin] = useState({
     username: '',
     password: '',

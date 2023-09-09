@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react';
-import { UserInfo, UserContextProviderProps, UserContextType } from './types';
+import { UserInfo, UserContextProviderProps, UserContextType } from '../../types';
 
 export const UserContext = createContext({} as UserContextType);
 

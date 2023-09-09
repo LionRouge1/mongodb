@@ -1,4 +1,4 @@
-import Entries from '../components/Entries';
+import Entries from '../Entries';
 
 const PostsPage = () => (
   <Entries />

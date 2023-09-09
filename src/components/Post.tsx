@@ -1,21 +1,27 @@
+import moment from 'moment';
+import { Link } from 'react-router-dom';
 import './styles/Post.css';
-import { PostProps } from '../types';
+import { post } from '../types';
 
 const Post = ({
-  image,
-  author,
+  _id,
+  cover,
+  summary,
   createdAt,
   title,
   content,
-} :PostProps) => (
+  author,
+} :post) => (
   <li className="post">
-    <img src={image} alt={title} />
+    <Link to={`/post/${_id}`}>
+      <img src={`http://localhost:4000/${cover}`} alt={title} />
+    </Link>
     <div>
-      <h2>{title}</h2>
+      <Link to={`/post/${_id}`}><h2>{title}</h2></Link>
       <p className="info">
-        <span className="author">{author}</span>
+        <span className="author">{author.username}</span>
         <time>
-          {createdAt}
+          {moment(createdAt).format('DD-MM-YYYY, h:mm a') }
         </time>
       </p>
       <p>{content}</p>

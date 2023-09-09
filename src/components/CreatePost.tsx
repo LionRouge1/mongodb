@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const modules = {
   toolbar: [
-    [{ 'header': [1, 2, false] }],
+    [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
     ['link', 'image'],
     ['clean'],
   ],
@@ -20,6 +21,7 @@ const formats = [
 ];
 
 const CreatePost = () => {
+  const navigate = useNavigate();
   const [postForm, setpostForm] = useState({
     title: '',
     summary: '',
@@ -47,7 +49,10 @@ const CreatePost = () => {
     const response = await fetch('http://localhost:4000/post', {
       method: 'POST',
       body: data,
+      credentials: 'include',
     });
+
+    if (response.ok) navigate('/');
   };
 
   return (

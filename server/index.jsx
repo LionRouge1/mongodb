@@ -5,7 +5,9 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./models/User');
+const User = require('./models/User.jsx');
+const Post = require('./models/Post.jsx');
+const fs = require('fs');
 
 const uploadMiddleware = multer({dest: 'uploads/'});
 
@@ -19,8 +21,9 @@ app.use(cors({
   origin: 'http://localhost:3000',
 }));
 app.use(express.json());
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
-mongoose.connect('mongodb+srv://mongofirst:uEDQya466V0TghTC@cluster0.gsiqstd.mongodb.net/');
+mongoose.connect('mongodb://127.0.0.1:27017/blog_database');
 
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
@@ -70,12 +73,43 @@ app.delete('/logout', (req, res) => {
 });
 
 app.post('/post', uploadMiddleware.single('image'), (req, res) => {
-  const {orignialname} = req.body.file;
-  console.log(req);
-  const parts =orignialname.split('.');
+  const { originalname, path } = req.file;
+  const { title, summary, content } = req.body;
+  const parts =originalname.split('.');
   const ext = parts[parts.length -1];
-  res.json(ext);
+  const newPath = `${path}.${ext}`;
+  fs.renameSync(path, newPath);
+
+  const { token } = req.cookies;
+  // console.log(token);
+  jwt.verify(token, secret, {}, async(err, info) => {
+    if (err) throw err;
+
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+
+    res.json(postDoc);
+  });
 });
+
+app.get('/posts', async (req, res) => {
+  res.json(
+    await Post.find()
+      .populate('author', ['username'])
+      .sort({createdAt: -1})
+      .limit(20)
+  );
+});
+
+app.get('/post/:id', async (req, res) => {
+  const { id } = req.params;
+  res.json(await Post.findById(id).populate('author', ['username']));
+})
 
 app.listen(4000);
 

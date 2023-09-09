@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './styles/Header.css';
-import { UserContext } from '../userContext';
+import { UserContext } from './contexts/userContext';
 
 const Header = () => {
 //   const [username, setUsername] = useState(null);
@@ -14,7 +14,7 @@ const Header = () => {
             setUser(userInfo);
           });
       });
-  }, []);
+  }, [setUser]);
 
   const logout = () => {
     fetch('http://localhost:4000/logout', {
