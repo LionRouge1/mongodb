@@ -1,4 +1,11 @@
 .entries {
     width: 80%;
     margin: 0 auto;
+    /* display: grid;
+    row-gap: 20px; */
+}
+
+.entries > ul {
+    display: grid;
+    row-gap: 20px;
 }

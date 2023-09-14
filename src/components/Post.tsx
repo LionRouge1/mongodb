@@ -9,7 +9,6 @@ const Post = ({
   summary,
   createdAt,
   title,
-  content,
   author,
 } :post) => (
   <li className="post">
@@ -24,7 +23,7 @@ const Post = ({
           {moment(createdAt).format('DD-MM-YYYY, h:mm a') }
         </time>
       </p>
-      <p>{content}</p>
+      <div>{summary}</div>
     </div>
   </li>
 );

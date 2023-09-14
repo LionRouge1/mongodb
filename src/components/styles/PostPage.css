@@ -1,0 +1,53 @@
+.post-page .image {
+  max-height: 200px;
+  display: flex;
+  overflow: hidden;
+}
+
+.post-page .image img {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.post-page h1 {
+  text-align: center;
+  margin: 10px 0 5px;
+}
+
+.post-page time {
+  text-align: center;
+  display: block;
+  font-size: .7rem;
+  color: #aaa;
+}
+
+.post-page .author {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: .7rem;
+  font-weight: bold;
+}
+
+.post-page .content p {
+  line-height: 1.6rem;
+}
+
+.edit-row {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.edit-btn {
+  background-color: #333;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 15px 30px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.edit-btn > svg {
+  height: 20px;
+}

@@ -61,10 +61,12 @@ app.post('/login', async (req, res) => {
 app.get('/profile', (req, res) => {
   const { token } = req.cookies;
   // console.log(token);
-  jwt.verify(token, secret, {}, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
+  if (token) {
+    jwt.verify(token, secret, {}, (err, info) => {
+      if (err) throw err;
+      res.json(info);
+    });
+  };
 });
 
 app.delete('/logout', (req, res) => {
@@ -92,6 +94,49 @@ app.post('/post', uploadMiddleware.single('image'), (req, res) => {
       cover: newPath,
       author: info.id,
     });
+
+    res.json(postDoc);
+  });
+});
+
+app.put('/post', uploadMiddleware.single('image'), async (req, res) => {
+  let newPath = null
+  if (req.file) {
+    const { originalname, path } = req.file;
+    const { title, summary, content } = req.body;
+    const parts =originalname.split('.');
+    const ext = parts[parts.length -1];
+    newPath = `${path}.${ext}`;
+    fs.renameSync(path, newPath);
+  }
+
+  const { token } = req.cookies;
+  // console.log(token);
+  jwt.verify(token, secret, {}, async(err, info) => {
+    if (err) throw err;
+
+    const { id, content, title, summary } = req.body;
+    const postDoc = await Post.findById(id);
+    const isAuth = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+
+    if (!isAuth) {
+      return res.status(400).json('Your not the author');
+    }
+
+    await postDoc.updateOne({
+      title,
+      content,
+      summary,
+      cover: newPath || postDoc.cover,
+    })
+    // res.json({ isAuth, postDoc, info });
+    // const postDoc = await Post.findById({
+    //   title,
+    //   summary,
+    //   content,
+    //   cover: newPath,
+    //   author: info.id,
+    // });
 
     res.json(postDoc);
   });

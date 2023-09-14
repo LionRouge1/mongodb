@@ -7,7 +7,7 @@ export type post = {
   title: string
   content: string
   author: {
-    id:string
+    _id:string
     username: string
   }
 }
@@ -31,8 +31,8 @@ export type UserContextProviderProps = {
 }
 
 export type UserContextType = {
-  user: UserInfo | null
-  setUser: React.Dispatch<React.SetStateAction<UserInfo | null>>
+  currentUser: UserInfo | null
+  setCurrentUser: React.Dispatch<React.SetStateAction<UserInfo | null>>
 }
 
 export type RedirectContextProviderProps = {
@@ -42,4 +42,16 @@ export type RedirectContextProviderProps = {
 export type RedirectContextType = {
   redirect: boolean
   setRedirect: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export type PostFormProps = {
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
+  handleInputs: (e: any) => void
+  postForm: {
+    title: string
+    summary: string
+    image: string[]
+    content: string
+  }
+  view?: string
 }

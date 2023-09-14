@@ -1,28 +1,11 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-    ['link', 'image'],
-    ['clean'],
-  ],
-};
-
-const formats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'link', 'image',
-];
+import PostForm from './PostForm';
 
 const CreatePost = () => {
   const navigate = useNavigate();
-  const [postForm, setpostForm] = useState({
+  const [postForm, setPostForm] = useState({
     title: '',
     summary: '',
     image: [],
@@ -30,7 +13,7 @@ const CreatePost = () => {
   });
 
   const handleInputs = (e: any) => {
-    setpostForm((prev) => ({
+    setPostForm((prev) => ({
       ...prev,
       [e.target?.name || 'content']: e.target?.files || e.target?.value || e,
     }));
@@ -56,35 +39,36 @@ const CreatePost = () => {
   };
 
   return (
-    <form className="create-post" onSubmit={createNewPost}>
-      <input
-        type="text"
-        placeholder="Enter post title"
-        name="title"
-        value={postForm.title}
-        onChange={handleInputs}
-      />
-      <input
-        type="summary"
-        name="summary"
-        placeholder="Enter post summary"
-        value={postForm.summary}
-        onChange={handleInputs}
-      />
-      <input
-        type="file"
-        name="image"
-        onChange={handleInputs}
-      />
-      <ReactQuill
-        modules={modules}
-        formats={formats}
-        value={postForm.content}
-        onChange={(newValue) => handleInputs(newValue)}
-      />
-      <button type="submit">create Post</button>
-      <span className="error" />
-    </form>
+    <PostForm handleSubmit={createNewPost} handleInputs={handleInputs} postForm={postForm} />
+    // <form className="create-post" onSubmit={createNewPost}>
+    //   <input
+    //     type="text"
+    //     placeholder="Enter post title"
+    //     name="title"
+    //     value={postForm.title}
+    //     onChange={handleInputs}
+    //   />
+    //   <input
+    //     type="summary"
+    //     name="summary"
+    //     placeholder="Enter post summary"
+    //     value={postForm.summary}
+    //     onChange={handleInputs}
+    //   />
+    //   <input
+    //     type="file"
+    //     name="image"
+    //     onChange={handleInputs}
+    //   />
+    //   <ReactQuill
+    //     modules={modules}
+    //     formats={formats}
+    //     value={postForm.content}
+    //     onChange={(newValue) => handleInputs(newValue)}
+    //   />
+    //   <button type="submit">create Post</button>
+    //   <span className="error" />
+    // </form>
   );
 };
 

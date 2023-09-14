@@ -7,7 +7,7 @@ import { redirectContext } from '../contexts/redirectContext';
 const LoginPage = () => {
   const [error, setError] = useState('');
   // const [redirect, setRedirect] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const { setCurrentUser } = useContext(UserContext);
   const { redirect, setRedirect } = useContext(redirectContext);
   const [{ username, password }, setLogin] = useState({
     username: '',
@@ -32,7 +32,7 @@ const LoginPage = () => {
     });
 
     if (response.status === 200) {
-      setUser(await response.json());
+      setCurrentUser(await response.json());
       setRedirect(true);
     } else {
       setError('Wrong credentials');

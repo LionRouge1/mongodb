@@ -5,26 +5,26 @@ import { UserContext } from './contexts/userContext';
 
 const Header = () => {
 //   const [username, setUsername] = useState(null);
-  const { user, setUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   useEffect(() => {
     fetch('http://localhost:4000/profile', { credentials: 'include' })
       .then((response) => {
         response.json()
           .then((userInfo) => {
-            setUser(userInfo);
+            setCurrentUser(userInfo);
           });
       });
-  }, [setUser]);
+  }, [setCurrentUser]);
 
   const logout = () => {
     fetch('http://localhost:4000/logout', {
       credentials: 'include',
       method: 'DELETE',
     });
-    setUser(null);
+    setCurrentUser(null);
   };
 
-  const username = user?.username;
+  const username = currentUser?.username;
   return (
     <header>
       <NavLink to="/" className="logo">MyLogo</NavLink>
